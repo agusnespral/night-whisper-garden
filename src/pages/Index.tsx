@@ -1,13 +1,27 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useNavigate } from 'react-router-dom';
+import WelcomeScreen from '@/components/WelcomeScreen';
+import { useWelcome } from '@/hooks/useWelcome';
+import { useEffect } from 'react';
 
 const Index = () => {
+  const { hasSeenWelcome, markWelcomed } = useWelcome();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (hasSeenWelcome) {
+      navigate('/night', { replace: true });
+    }
+  }, [hasSeenWelcome, navigate]);
+
+  if (hasSeenWelcome) return null;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <WelcomeScreen
+      onStart={() => {
+        markWelcomed();
+        navigate('/night');
+      }}
+    />
   );
 };
 
